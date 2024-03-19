@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,44 +14,31 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(user: User): Promise<User> {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
+  async register(registerDto: RegisterDto): Promise<User> {
+    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
     const newUser = this.userRepository.create({
-      ...user,
+      ...registerDto,
       password: hashedPassword,
     });
 
     return this.userRepository.save(newUser);
   }
 
-  async login(user: User): Promise<{ access_token: string }> {
+  async login(loginDto: LoginDto): Promise<{ access_token: string }> {
     const userFound = await this.userRepository.findOne({
-      where: { email: user.email },
+      where: { email: loginDto.email },
     });
 
-    if (!userFound) {
-      throw new UnauthorizedException('Credenciais inválidas.');
-    }
-
-    const isPasswordMatching = await bcrypt.compare(
-      user.password,
-      userFound.password,
-    );
-    if (!isPasswordMatching) {
-      throw new UnauthorizedException('Credenciais inválidas.');
-    }
-
     if (
-      userFound &&
-      (await bcrypt.compare(user.password, userFound.password))
+      !userFound ||
+      !(await bcrypt.compare(loginDto.password, userFound.password))
     ) {
-      const payload = { username: userFound.email, sub: userFound.id };
-
-      return {
-        access_token: this.jwtService.sign(payload),
-      };
+      throw new UnauthorizedException('Credenciais inválidas.');
     }
 
-    return null;
+    const payload = { username: userFound.email, sub: userFound.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }

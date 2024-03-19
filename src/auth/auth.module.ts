@@ -19,7 +19,7 @@ import { User } from './entities/user.entity';
       }),
       inject: [ConfigService],
     }),
-    PassportModule, // Neste exemplo básico, PassportModule é importado mas não configurado detalhadamente
+    PassportModule,
   ],
   providers: [AuthService],
   controllers: [AuthController],
