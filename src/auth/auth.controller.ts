@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, HttpException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from './entities/user.entity';
 
@@ -13,6 +13,10 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() user: User) {
-    return this.authService.login(user);
+    try {
+      return await this.authService.login(user);
+    } catch (error) {
+      throw new HttpException(error.response, error.status);
+    }
   }
 }

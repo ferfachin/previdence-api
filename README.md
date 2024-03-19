@@ -1,7 +1,3 @@
-Claro, aqui está a versão ajustada da documentação para o seu README, destacando o uso do Docker e Yarn para a aplicação.
-
----
-
 # Previdencia Api
 
 Esta é uma API de autenticação e registro de usuários, construída com NestJS, TypeORM e PostgreSQL. Utiliza JWT (JSON Web Tokens) para gestão de sessões. O projeto é configurado para rodar em containers Docker, e as dependências são gerenciadas com Yarn.
