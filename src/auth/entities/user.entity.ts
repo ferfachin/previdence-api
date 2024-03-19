@@ -1,9 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User {
-  @ApiProperty({ example: 1, description: 'The id of the User' })
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -15,4 +13,13 @@ export class User {
 
   @Column()
   username: string;
+
+  @Column({ default: 'user' })
+  role: string;
+
+  @Column({ nullable: true })
+  resetToken: string;
+
+  @Column({ type: 'bigint', nullable: true })
+  resetTokenTimestamp: number;
 }

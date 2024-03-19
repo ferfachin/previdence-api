@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Torna o ConfigModule disponível globalmente
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
@@ -17,7 +17,7 @@ import { AuthModule } from './auth/auth.module';
         password: config.get('DATABASE_PASSWORD'),
         database: config.get('DATABASE_NAME'),
         autoLoadEntities: true,
-        synchronize: true, // Nota: definir como 'false' para produção
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
